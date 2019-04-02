@@ -58,29 +58,28 @@ public class Lexer {
                     }
                     else if ( digit( sym ) ) {
                         data += (char) sym;
-                        state = 3;8
+                        state = 6;
                     }
-                    else if ( sym == '.' ) {
+                    else if ( sym == '-' ) {
                         data += (char) sym;
                         state = 5;
                     }
-                    else if ( sym == '\"' ) {
-                        state = 6;
+                    else if ( sym == ')' ) {
+                        data = (char) sym;
+                        state = 3;
+                        done = true;
                     }
-                    else if ( sym == '+' || sym == '-' || sym == '*' ||
-                            sym == '(' || sym == ')' ||
-                            sym == ',' || sym == '='
-                    ) {
-                        data += (char) sym;
+                    else if ( sym == '(' ) {
+                        data = (char) sym;
+                        state = 4;
+                        done = true;
+                    }
+                    else if ( sym == -1 ) {// end of file
                         state = 8;
                         done = true;
                     }
-                    else if ( sym == '/' ) {
-                        state = 10;
-                    }
-                    else if ( sym == -1 ) {// end of file
+                    else if ( sym == ';' ) {// comment
                         state = 9;
-                        done = true;
                     }
                     else {
                         error("Error in lexical analysis phase with symbol "
@@ -93,34 +92,7 @@ public class Lexer {
                         data += (char) sym;
                         state = 2;
                     }
-                    else {// done with variable token
-                        putBackSymbol( sym );
-                        done = true;
-                    }
-                }
-
-                else if ( state == 3 ) {
-                    if ( digit(sym) ) {
-                        data += (char) sym;
-                        state = 3;
-                    }
-                    else if ( sym == '.' ) {
-                        data += (char) sym;
-                        state = 4;
-                    }
-                    else {// done with number token
-                        putBackSymbol( sym );
-                        done = true;
-                    }
-
-                }
-
-                else if ( state == 4 ) {
-                    if ( digit(sym) ) {
-                        data += (char) sym;
-                        state = 4;
-                    }
-                    else {// done with number token
+                    else {// done with NAME token
                         putBackSymbol( sym );
                         done = true;
                     }
@@ -129,56 +101,40 @@ public class Lexer {
                 else if ( state == 5 ) {
                     if ( digit(sym) ) {
                         data += (char) sym;
-                        state = 4;
+                        state = 6;
+                    } 
+               }
+                
+               else if ( state == 6 ) {
+                   if ( digit(sym) ) {
+                       data += (char) sym;
+                   }
+                   else if ( sym == '.' ) {
+                        data += (char) sym;
+                        state = 7;
                     }
-                    else {
-                        error("Error in lexical analysis phase with symbol "
-                                + sym + " in state " + state );
+                    else {// done with number token
+                        putBackSymbol( sym );
+                        done = true;
                     }
+
                 }
 
-                else if ( state == 6 ) {
-                    if ( (' '<=sym && sym<='~') && sym != '\"' ) {
+                else if ( state == 7 ) {
+                    if ( digit(sym) ) {
                         data += (char) sym;
-                        state = 6;
                     }
-                    else if ( sym == '\"' ) {
-                        state = 7;
+                    else {// done with number token
+                        putBackSymbol( sym );
                         done = true;
                     }
                 }
 
-                // note: states 7, 8, and 9 are accepting states with
-                //       no arcs out of them, so they are handled
-                //       in the arc going into them
-
-                else if ( state == 10 ) {// saw /, might be single or comment
-                    if ( sym == '*' ) {// starting comment
-                        state = 11;
+                else if ( state == 9 ) {
+                  if ( sym == 10 ) {
+                      state = 1;
                     }
-                    else {// saw something other than * after /
-                        putBackSymbol( sym );  // for next token
-                        return new Token( "single", "/" );
-                    }
-                }
-
-                else if ( state == 11 ) {// ignoring most everything
-                    if ( sym == '*' ) {// maybe start of end of comment
-                        state = 12;
-                    }
-                    else {
-                        state = 11;  // ignore it
-                    }
-                }
-
-                else if ( state == 12 ) {// looking for / to follow *?
-                    if ( sym == '/' ) {// comment is done
-                        state = 1;  // continue in this call to getNextToken
-                        data = "";
-                    }
-                    else {// was not end of comment
-                        state = 11;  // go back to ignoring things
-                    }
+                  
                 }
 
             }while( !done );
@@ -189,26 +145,37 @@ public class Lexer {
             if ( state == 2 ) {
                 // now anything starting with letter is either a
                 // key word or a "var"
-                if ( data.equals("def") || data.equals("end") ||
-                        data.equals("if") || data.equals("else") ||
-                        data.equals("return")
+                if ( data.equals("define") || data.equals("plus") ||
+                     data.equals("minus") || data.equals("times") ||
+                     data.equals("div") ||
+                     data.equals("lt") || data.equals("le") ||
+                     data.equals("eq") || data.equals("ne") ||
+                     data.equals("and") ||
+                     data.equals("or") || data.equals("not") ||
+                     data.equals("ins") || data.equals("first") ||
+                     data.equals("rest") ||
+                     data.equals("null") || data.equals("num") ||
+                     data.equals("list") || data.equals("read") ||
+                     data.equals("write") ||
+                     data.equals("nl") || data.equals("quote") ||
+                     data.equals("quit") 
                 ) {
-                    return new Token( data, "" );
+                    return new Token( data , "" );
                 }
                 else {
-                    return new Token( "var", data );
+                    return new Token( "name", data );
                 }
             }
-            else if ( state == 3 || state == 4 ) {
-                return new Token( "num", data );
+            else if ( state == 3 ) {
+                return new Token( "(", "" );
             }
-            else if ( state == 7 ) {
-                return new Token( "string", data );
+            else if ( state == 4 ) {
+                return new Token( ")", "" );
+            }
+            else if ( state == 6 || 7 ) {
+                return new Token( "number", data );
             }
             else if ( state == 8 ) {
-                return new Token( "single", data );
-            }
-            else if ( state == 9 ) {
                 return new Token( "eof", data );
             }
 
