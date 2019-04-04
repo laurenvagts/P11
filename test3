@@ -1,0 +1,9 @@
+; compute n choose k:
+(define (pastri n k)
+    (if (or (eq k 0) (eq n k))
+        1
+        (plus (pastri (minus n 1) (minus k 1))
+              (pastri (minus n 1) k)
+        )
+    )
+)
