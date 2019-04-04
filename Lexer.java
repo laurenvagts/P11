@@ -65,12 +65,12 @@ public class Lexer {
                         state = 5;
                     }
                     else if ( sym == ')' ) {
-                        data = (char) sym;
+                        data += (char) sym;
                         state = 3;
                         done = true;
                     }
                     else if ( sym == '(' ) {
-                        data = (char) sym;
+                        data += (char) sym;
                         state = 4;
                         done = true;
                     }
@@ -172,7 +172,7 @@ public class Lexer {
             else if ( state == 4 ) {
                 return new Token( ")", "" );
             }
-            else if ( state == 6 || 7 ) {
+            else if ( state == 6 || state == 7 ) {
                 return new Token( "number", data );
             }
             else if ( state == 8 ) {
