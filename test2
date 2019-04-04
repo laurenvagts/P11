@@ -1,0 +1,23 @@
+;  do in-order traversal of given binary tree
+(define (iot tree)
+   (if (null tree)
+       (quote ())
+       (combine (iot (second tree)) (ins (first tree) (iot (third tree)) ))
+   )
+)
+
+(define (second tree)
+    (first (rest tree))
+)
+
+(define (third tree)
+    (first (rest (rest tree)))
+)
+
+; combine list1 and list2 into one list
+(define (combine list1 list2)
+    (if (null list1)
+        list2
+        (ins (first list1) (combine (rest list1) list2))
+    )
+)
