@@ -50,7 +50,7 @@ public class Parser {
 
         token = lex.getNextToken();
 
-        if ( token.matches( ")" )) {// no params
+        if ( token.isKind( ")" )) {// no params
 
             Node second = parseExpr();
 
@@ -64,7 +64,7 @@ public class Parser {
             Node first = parseParams();
             token = lex.getNextToken();
             errorCheck( token,")" );
-            Node first = parseExpr();
+            Node second = parseExpr();
             token = lex.getNextToken();
             errorCheck(token, ")");
             return new Node("defs", name.getDetails(), first, second, null);
@@ -79,9 +79,9 @@ public class Parser {
         Token name = lex.getNextToken();
         errorCheck( name, "name" );
 
-        token = lex.getNextToken();
+        Token token = lex.getNextToken();
 
-        if ( token.matches( ")" ) ) {// no more params
+        if ( token.isKind( ")" ) ) {// no more params
             lex.putBackToken( token );  // funcCall handles the )
             return new Node( "params", name.getDetails(), null, null, null );
         }
@@ -119,7 +119,7 @@ public class Parser {
 
         token = lex.getNextToken();
 
-        if ( token.matches( ")" ) ) {
+        if ( token.isKind( ")" ) ) {
             return new Node( "list", null, null, null );
         }
         else {
@@ -139,7 +139,7 @@ public class Parser {
 
         Token token = lex.getNextToken();
 
-        if ( token.matches(")") ) {
+        if ( token.isKind(")") ) {
             lex.putBackToken(token);
             return new Node( "items", first, null, null );
         }
