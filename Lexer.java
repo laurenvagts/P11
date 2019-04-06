@@ -64,12 +64,12 @@ public class Lexer {
                         data += (char) sym;
                         state = 5;
                     }
-                    else if ( sym == ')' ) {
+                    else if ( sym == '(' ) {
                         data += (char) sym;
                         state = 3;
                         done = true;
                     }
-                    else if ( sym == '(' ) {
+                    else if ( sym == ')' ) {
                         data += (char) sym;
                         state = 4;
                         done = true;

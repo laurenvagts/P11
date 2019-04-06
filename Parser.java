@@ -133,13 +133,14 @@ public class Parser {
     }// <list>
 
     private Node parseItems() {
-        System.out.println("-----> parsing <defs>:");
+        System.out.println("-----> parsing <items>:");
 
         Node first = parseExpr();
 
         Token token = lex.getNextToken();
 
-        if ( token.isKind("eof") ) {
+        if ( token.matches(")") ) {
+            lex.putBackToken(token);
             return new Node( "items", first, null, null );
         }
         else {
