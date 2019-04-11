@@ -98,10 +98,10 @@ public class Parser {
         Token token = lex.getNextToken();
 
         if ( token.isKind( "name" ) ) {
-            return new Node( "expr", token.getDetails(), null, null, null );
+            return new Node( "name", token.getDetails(), null, null, null );
         }
         else if ( token.isKind( "number" ) ) {
-            return new Node ( "expr", token.getDetails(), null, null, null );
+            return new Node ( "number", token.getDetails(), null, null, null );
         }
         else {
             lex.putBackToken( token );
