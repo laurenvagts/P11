@@ -442,5 +442,30 @@ System.out.println("has " + number + " children");
       }// function name found
 
    }// passArguments
+    
+   public void printContents() {
+      if (kind.equals("expr")) {
+         if (first == null)
+            System.out.print(info);
+         else
+            second.printContents();
+      }
+      else if (kind.equals("list")) {
+         System.out.print("(");
+         if (first != null)
+            first.printContents();
+         System.out.print(")");
+      }
+      else if (kind.equals("items")) {
+         first.printContents();
+         if (second != null)
+            second.printContents();
+      }
+      else {
+         System.out.println("Tried to print an invalid node type.");
+      }
+      System.out.println();
+       
+   }// printContents
 
 }// Node
