@@ -40,7 +40,7 @@ public class P11 {
 
         //execute the input
         lex = new Lexer("expression.txt");
-        parser = new Parser("expression.txt");
+        parser = new Parser(lex);
         Node root = parser.parseExpr();
         root.execute(libraryExpressions);
         
