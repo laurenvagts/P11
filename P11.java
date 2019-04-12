@@ -41,8 +41,9 @@ public class P11 {
         //execute the input
         lex = new Lexer("expression.txt");
         parser = new Parser(lex);
-        Node root = parser.parseExpr();
-        root.execute(libraryExpressions);
+        Node root = parser.parseList();
+        Node result = root.evaluate(libraryExpressions); //return type is a <list> or an <expr> holding a number
+        result.printContents();
         
         //get the next expression or exit
         System.out.print("? ");
