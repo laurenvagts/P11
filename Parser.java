@@ -67,7 +67,7 @@ public class Parser {
             Node second = parseExpr();
             token = lex.getNextToken();
             errorCheck(token, ")");
-            return new Node("defs", name.getDetails(), first, second, null);
+            return new Node("def", name.getDetails(), first, second, null);
         }// have params
 
     }// parseDef
