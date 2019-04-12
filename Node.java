@@ -445,10 +445,10 @@ System.out.println("has " + number + " children");
     
    public void printContents() {
       if (kind.equals("expr")) {
-         if (first == null)
-            System.out.print(info);
-         else
-            second.printContents();
+         first.printContents();
+      }
+      else if (kind.equals("number") || kind.equals("name")) {
+         System.out.print(info);
       }
       else if (kind.equals("list")) {
          System.out.print("(");
