@@ -62,7 +62,13 @@ public class Node {
     count++;
     System.out.println( this );
   }
-
+    
+   //construct a node that is essentially a number
+   public Node( String num ) {
+      kind = "number";  info = num;  
+      first = null;  second = null;  third = null;
+   }
+    
   public String toString() {
     return "#" + id + "[" + kind + "," + info + "]<" + nice(first) + 
               " " + nice(second) + ">";
@@ -471,5 +477,42 @@ System.out.println("has " + number + " children");
    public void setRoot(Node rt) {
       root = rt;
    }//setRoot
+   
+   public Node evaluate() {
+      if (kind.equals("number")) {
+         return this;
+      }
+      else if (kind.equals("list")) {
+         if (first == null) { //is an empty list
+            return this;
+         }
+         else { //list contains an expression to evaluate
+            Node expression = first.first;
+            if (expression.info.equals("plus")) {
+               double arg1 = Double.parseDouble(first.second.first.evaluate().info);
+               double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
+               return new Node(String.parseString(arg1 + arg2));
+            }
+            else if (expression.info.equals("minus")) {
+               double arg1 = Double.parseDouble(first.second.first.evaluate().info);
+               double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
+               return new Node(String.parseString(arg1 - arg2));
+            }
+            else if (expression.info.equals("times")) {
+               double arg1 = Double.parseDouble(first.second.first.evaluate().info);
+               double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
+               return new Node(String.parseString(arg1 * arg2));
+            }
+            else if (expression.info.equals("div")) {
+               double arg1 = Double.parseDouble(first.second.first.evaluate().info);
+               double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
+               return new Node(String.parseString(arg1 / arg2));
+            }
+            else { //user defined expression
+               return expression.evaluate();
+            }
+         }
+      }
+   }//evaluate
 
 }// Node
