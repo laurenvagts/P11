@@ -463,8 +463,10 @@ System.out.println("has " + number + " children");
       }
       else if (kind.equals("items")) {
          first.printContents();
-         if (second != null)
+         if (second != null) {
+            System.out.print(" ");
             second.printContents();
+         }
       }
       else {
          System.out.println("Tried to print an invalid node type.");
@@ -477,6 +479,32 @@ System.out.println("has " + number + " children");
       root = rt;
    }//setRoot
    
+   //This is basically passArgs for functions without any arguments
+   private static Node findFunction(String funcName) {
+
+      // locate the function in the function definitions
+
+      Node node = root;  // the defs node
+      Node fdnode = null;
+      while ( node != null && fdnode == null ) {
+         if ( node.first.info.equals(funcName) ) {// found it
+            fdnode = node.first;
+            // System.out.println("located " + funcName + " at node " + 
+            //                     fdnode.id );
+         }
+         else
+           node = node.second;
+      }
+
+      if ( fdnode == null ) {// function not found
+         error( "Function definition for [" + funcName + "] not found" );
+         return null;
+      }
+
+      return fdnode;  
+
+   }// findFunction
+    
    public Node evaluate() {
       if (kind.equals("number")) {
          return this;
@@ -598,6 +626,10 @@ System.out.println("has " + number + " children");
       }
       else if (kind.equals("expr")) {
          return first.evaluate(); //first will always be a list
+      }
+      else if (kind.equals("name")) { //node has to be a user defined function without any parameters
+         Node body = findFunction(info);
+         return body.second.execute();
       }
    }//evaluate
 
