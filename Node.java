@@ -645,16 +645,22 @@ System.out.println("has " + number + " children");
             }
             else { //user defined expression
                Node body = passArgs(this, expression.info);
-               return body.second.evaluate();
+               Node returnValueNode = body.second.evaluate();
+               memStack.remove(memStack.size() - 1); //removes the memTable holding our parameters once we are done with it
+               return returnValueNode;
             }
          }
       }
       else if (kind.equals("expr")) {
          return first.evaluate(); //first will always be a list
       }
-      else if (kind.equals("name")) { //node has to be a user defined function without any parameters
+      else if (kind.equals("name")) { //node has to be a parameter or a user defined function without any parameters
          Node body = findFunction(info);
-         return body.second.evaluate();
+         if (body == null) { //name is not found in user defined functions so the node is a parameter
+            return memStack.get(memStack.size() - 1).retrieve(info); //gets the value of the parameter from the memTable at the top of memStack
+         }
+         else //name was found in the user defined functions
+            return body.second.evaluate();
       }
    }//evaluate
 
