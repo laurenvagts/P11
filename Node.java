@@ -508,10 +508,68 @@ System.out.println("has " + number + " children");
                double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
                return new Node(String.parseString(arg1 / arg2));
             }
-            else { //user defined expression
+            else if (expression.info.equals("lt")) {
+               double arg1 = Double.parseDouble(first.second.first.evaluate().info);
+               double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
+               if (arg1 < arg2)
+                  return new Node("1");
+               else
+                  return new Node("0");
+            }
+            else if (expression.info.equals("le")) {
+               double arg1 = Double.parseDouble(first.second.first.evaluate().info);
+               double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
+               if (arg1 <= arg2)
+                  return new Node("1");
+               else
+                  return new Node("0");
+            }
+            else if (expression.info.equals("eq")) {
+               double arg1 = Double.parseDouble(first.second.first.evaluate().info);
+               double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
+               if (arg1 == arg2)
+                  return new Node("1");
+               else
+                  return new Node("0");
+            }
+            else if (expression.info.equals("ne")) {
+               double arg1 = Double.parseDouble(first.second.first.evaluate().info);
+               double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
+               if (arg1 != arg2)
+                  return new Node("1");
+               else
+                  return new Node("0");
+            }
+            else if (expression.info.equals("and")) {
+               double arg1 = Double.parseDouble(first.second.first.evaluate().info);
+               double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
+               if ((arg1 != 0) && (arg2 != 0))
+                  return new Node("1");
+               else
+                  return new Node("0");
+            }
+            else if (expression.info.equals("or")) {
+               double arg1 = Double.parseDouble(first.second.first.evaluate().info);
+               double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
+               if ((arg1 != 0) || (arg2 != 0))
+                  return new Node("1");
+               else
+                  return new Node("0");
+            }
+            else if (expression.info.equals("not")) {
+               double arg1 = Double.parseDouble(first.second.first.evaluate().info);
+               if (arg1 == 0)
+                  return new Node("1");
+               else
+                  return new Node("0");
+            }
+            else { //user defined expression, list, or number
                return expression.evaluate();
             }
          }
+      }
+      else if (kind.equals("expr")) {
+         return first.evaluate(); //first will always be a list
       }
    }//evaluate
 
