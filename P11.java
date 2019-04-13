@@ -21,6 +21,7 @@ public class P11 {
 
       // start with <statements>
       Node libraryExpressions = parser.parseDefs();
+      setRoot(libraryExpressions);
 
       // display parse tree for debugging/testing:
       TreeViewer viewer = new TreeViewer("Parse Tree", 0, 0, 800, 500, libraryExpressions );
@@ -42,7 +43,7 @@ public class P11 {
         lex = new Lexer("expression.txt");
         parser = new Parser(lex);
         Node root = parser.parseList();
-        Node result = root.evaluate(libraryExpressions); //return type is a <list> or an <expr> holding a number
+        Node result = root.evaluate(); //return type is a <list> or an <expr> holding a number
         result.printContents();
         
         //get the next expression or exit
