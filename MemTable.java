@@ -7,11 +7,11 @@ import java.util.ArrayList;
 public class MemTable {
 
     private ArrayList<String> names;
-    private ArrayList<Double> values;
+    private ArrayList<Node> values;
 
     public MemTable() {
         names = new ArrayList<String>();
-        values = new ArrayList<Double>();
+        values = new ArrayList<Node>();
     }
 
     public String toString() {
@@ -28,7 +28,7 @@ public class MemTable {
 
     // store value for name, adding name if not already
     // there
-    public void store( String name, double value ) {
+    public void store( String name, Node value ) {
 
         int loc = findName( name );
 
@@ -43,7 +43,7 @@ public class MemTable {
     }// store
 
     // retrieve value for given name
-    public double retrieve( String name ) {
+    public Node retrieve( String name ) {
 
         int loc = findName( name );
 
