@@ -488,6 +488,8 @@ System.out.println("has " + number + " children");
          }
          else { //list contains an expression to evaluate
             Node expression = first.first;
+            if (expression == null) //empty list
+               return this;
             if (expression.info.equals("plus")) {
                double arg1 = Double.parseDouble(first.second.first.evaluate().info);
                double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
@@ -565,6 +567,34 @@ System.out.println("has " + number + " children");
             }
             else { //user defined expression, list, or number
                return expression.evaluate();
+            }
+            else if (expression.info.equals("ins")) {
+               Node arg1 = first.second.first; //arg1 is an expression
+               Node arg2 = first.second.second.first.first; //arg2 is a list
+               if (arg2.first == null) { //arg2 is empty
+                  Node front = new Node("items", arg1, null, null);
+                  arg2.first = front;
+                  return arg2; //not sure if the new list should be evaluated or not
+               }
+               else {
+                  Node front = new Node("items", arg1, arg2.first, null); //check this line
+                  return new Node("list", front, null, null);
+               }
+            }
+            else if (expression.info.equals("first")) {
+               Node arg1 = first.second.first.first; //arg1 is a list
+               if (arg1.first == null) {
+                  System.out.println("Error: Tried to get the first element of an empty list");
+                  return null; //Should eventually throw an error instead of this
+               }
+               else {
+                  return arg1.first.first;
+               }
+            }
+            else if (expression.info.equals("rest")) { //currently assumes arg1 has at least one item
+               Node arg1 = first.second.first.first; //arg1 is a list
+               arg1.first = arg1.first.second;
+               return arg1;
             }
          }
       }
