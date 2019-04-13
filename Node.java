@@ -592,9 +592,6 @@ System.out.println("has " + number + " children");
                else
                   return new Node("0");
             }
-            else { //user defined expression, list, or number
-               return expression.evaluate();
-            }
             else if (expression.info.equals("ins")) {
                Node arg1 = first.second.first; //arg1 is an expression
                Node arg2 = first.second.second.first.first; //arg2 is a list
@@ -622,6 +619,34 @@ System.out.println("has " + number + " children");
                arg1.first = arg1.first.second;
                return arg1;
             }
+            else if (expression.info.equals("null")) {
+            }
+            else if (expression.info.equals("num")) {
+            }
+            else if (expression.info.equals("list")) {
+            }
+            else if (expression.info.equals("read")) {
+            }
+            else if (expression.info.equals("write")) {
+            }
+            else if (expression.info.equals("nl")) {
+            }
+            else if (expression.info.equals("quote")) {
+            }
+            else if (expression.info.equals("quit")) {
+            }
+            else if (expression.info.equals("if")) {
+            }
+            else if (expression.kind.equals("number")) {
+               return expression;
+            }
+            else if (expression.kind.equals("expr")) { //can only be an expression holding a list
+               return expression.first.evaluate();
+            }
+            else { //user defined expression
+               Node body = passArgs(this, expression.info);
+               return body.second.evaluate();
+            }
          }
       }
       else if (kind.equals("expr")) {
@@ -629,7 +654,7 @@ System.out.println("has " + number + " children");
       }
       else if (kind.equals("name")) { //node has to be a user defined function without any parameters
          Node body = findFunction(info);
-         return body.second.execute();
+         return body.second.evaluate();
       }
    }//evaluate
 
