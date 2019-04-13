@@ -467,5 +467,9 @@ System.out.println("has " + number + " children");
       System.out.println();
        
    }// printContents
+    
+   public void setRoot(Node rt) {
+      root = rt;
+   }//setRoot
 
 }// Node
