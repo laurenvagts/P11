@@ -393,12 +393,11 @@ System.out.println("has " + number + " children");
    // create new memory table with arguments values assigned
    // to parameters
    // Also, return root node of body of the function being called
-   private static Node passArgs( Node funcCallNode, String funcName ) {
+   private static Node passArgs( Node funcCallNode, String funcName) {
 
       // locate the function in the function definitions
 
-      Node node = root;  // the program node
-      node = node.second;  // now is the funcDefs node
+      Node node = root;  // the defs node
       Node fdnode = null;
       while ( node != null && fdnode == null ) {
          if ( node.first.info.equals(funcName) ) {// found it
@@ -418,7 +417,7 @@ System.out.println("has " + number + " children");
       }
       else {// function name found
          Node pnode = fdnode.first; // current params node
-         Node anode = funcCallNode.first;  // current args node
+         Node anode = funcCallNode.first.second;  // current args node
          while ( pnode != null && anode != null ) {
             // store argument value under parameter name
             newTable.store( pnode.first.info,
@@ -584,8 +583,7 @@ System.out.println("has " + number + " children");
             else if (expression.info.equals("first")) {
                Node arg1 = first.second.first.first; //arg1 is a list
                if (arg1.first == null) {
-                  System.out.println("Error: Tried to get the first element of an empty list");
-                  return null; //Should eventually throw an error instead of this
+                  error("Error: Tried to get the first element of an empty list");
                }
                else {
                   return arg1.first.first;
