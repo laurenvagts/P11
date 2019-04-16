@@ -398,22 +398,60 @@ System.out.println("has " + number + " children");
                return arg1;
             }
             else if (expression.info.equals("null")) {
+                Node arg1 = first.second.first;
+                if (arg1.first == null) {
+                    return new Node("1");
+                }
+                else {
+                    return new Node("0");
+                }
             }
             else if (expression.info.equals("num")) {
+                Node arg1 = first.second.first;
+                if (arg1.kind == "num") {
+                    return new Node("1");
+                }
+                else {
+                    return new Node("0");
+                }
             }
             else if (expression.info.equals("list")) {
+                Node arg1 = first.second.first;
+                if (arg1.kind == "list") {
+                    return new Node("1");
+                }
+                else {
+                    return new Node("0");
+                }
             }
             else if (expression.info.equals("read")) {
+                System.out.println("?");
+                Scanner input = new Scanner(System.in);
+                //String in = input;
+                return new Node(input.next());
             }
             else if (expression.info.equals("write")) {
+                System.out.print(first.second.first.evaluate() + " ");
             }
             else if (expression.info.equals("nl")) {
+                System.out.println();
             }
             else if (expression.info.equals("quote")) {
+                return first.second.first;
             }
             else if (expression.info.equals("quit")) {
+                System.exit(1);
             }
             else if (expression.info.equals("if")) {
+                Node arg1 = first.second.first;
+                if(arg1.evaluate().info == "0"){
+                    Node arg3 = first.second.second.second.first;
+                    return arg3.evaluate();
+                }
+                else{
+                    Node arg2 = first.second.second.first;
+                    return arg2.evaluate();
+                }
             }
             else if (expression.kind.equals("number")) {
                return expression;
