@@ -64,8 +64,8 @@ public class Node {
   }
     
    //construct a node that is essentially a number
-   public Node( String num ) {
-      kind = "number";  info = num;  
+   public Node( String str ) {
+      kind = "number";  info = str;  
       first = null;  second = null;  third = null;
    }
     
@@ -371,20 +371,20 @@ System.out.println("has " + number + " children");
                   return new Node("0");
             }
             else if (expression.info.equals("ins")) {
-               Node arg1 = first.second.first; //arg1 is an expression
-               Node arg2 = first.second.second.first.first; //arg2 is a list
+               Node arg1 = first.second.first.evaluate(); //arg1 is an expression
+               Node arg2 = first.second.second.first.evaluate(); //arg2 is a list
                if (arg2.first == null) { //arg2 is empty
                   Node front = new Node("items", arg1, null, null);
                   arg2.first = front;
-                  return arg2; //not sure if the new list should be evaluated or not
+                  return arg2;
                }
                else {
-                  Node front = new Node("items", arg1, arg2.first, null); //check this line
+                  Node front = new Node("items", arg1, arg2.first, null);
                   return new Node("list", front, null, null);
                }
             }
             else if (expression.info.equals("first")) {
-               Node arg1 = first.second.first.first; //arg1 is a list
+               Node arg1 = first.second.first.evaluate(); //arg1 is a list
                if (arg1.first == null) {
                   error("Error: Tried to get the first element of an empty list");
                }
@@ -393,7 +393,7 @@ System.out.println("has " + number + " children");
                }
             }
             else if (expression.info.equals("rest")) { //currently assumes arg1 has at least one item
-               Node arg1 = first.second.first.first; //arg1 is a list
+               Node arg1 = first.second.first.evaluate(); //arg1 is a list
                arg1.first = arg1.first.second;
                return arg1;
             }
@@ -444,7 +444,7 @@ System.out.println("has " + number + " children");
             }
             else if (expression.info.equals("if")) {
                 Node arg1 = first.second.first;
-                if(arg1.evaluate().info == "0"){
+                if(arg1.evaluate().info.equals("0")){
                     Node arg3 = first.second.second.second.first;
                     return arg3.evaluate();
                 }
