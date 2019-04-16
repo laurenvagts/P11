@@ -73,7 +73,7 @@ public class Parser {
     }// parseDef
 
 
-    private Node parseParams() {
+    public Node parseParams() {
         System.out.println("-----> parsing <params>:");
 
         Token name = lex.getNextToken();
@@ -92,7 +92,7 @@ public class Parser {
 
     }// <params>
 
-    private Node parseExpr() {
+    public Node parseExpr() {
         System.out.println("-----> parsing <expr>:");
 
         Token token = lex.getNextToken();
@@ -111,7 +111,7 @@ public class Parser {
 
     }// <expr>
 
-    private Node parseList() {
+    public Node parseList() {
         System.out.println("-----> parsing <list>:");
 
         Token token = lex.getNextToken(); // function name
@@ -132,7 +132,7 @@ public class Parser {
 
     }// <list>
 
-    private Node parseItems() {
+    public Node parseItems() {
         System.out.println("-----> parsing <items>:");
 
         Node first = parseExpr();
@@ -151,7 +151,7 @@ public class Parser {
     }//<items>
 
     // check whether token is correct kind
-    private void errorCheck( Token token, String kind ) {
+    public void errorCheck( Token token, String kind ) {
         if( ! token.isKind( kind ) ) {
             System.out.println("Error:  expected " + token +
                     " to be of kind " + kind );
@@ -160,7 +160,7 @@ public class Parser {
     }
 
     // check whether token is correct kind and details
-    private void errorCheck( Token token, String kind, String details ) {
+    public void errorCheck( Token token, String kind, String details ) {
         if( ! token.isKind( kind ) ||
                 ! token.getDetails().equals( details ) ) {
             System.out.println("Error:  expected " + token +

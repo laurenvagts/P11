@@ -21,24 +21,24 @@ public class P11 {
 
       // start with <statements>
       Node libraryExpressions = parser.parseDefs();
-      setRoot(libraryExpressions);
+      Node.setRoot(libraryExpressions);
 
       // display parse tree for debugging/testing:
-      TreeViewer viewer = new TreeViewer("Parse Tree", 0, 0, 800, 500, libraryExpressions );
+      // TreeViewer viewer = new TreeViewer("Parse Tree", 0, 0, 800, 500, libraryExpressions );
       
-      PrintWriter pw;
+
       System.out.print("? ");
       String input = keys.nextLine();
       
       while (!input.equals("exit")) {
-	      
+          PrintWriter pw;
         //get additional lines of input
         pw = new PrintWriter("expression.txt"); //creates a new PrintWriter to clear the file expression.txt
         while (!input.equals("done")) {
           pw.write(input); //input is added to the file expression.txt here only
           input = keys.nextLine();
-	}
-
+        }
+          pw.close();
         //execute the input
         lex = new Lexer("expression.txt");
         parser = new Parser(lex);
@@ -50,7 +50,7 @@ public class P11 {
         System.out.print("? ");
         input = keys.nextLine();
       }
-      pw.close();
+
    }// main
 
 }

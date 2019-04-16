@@ -150,238 +150,16 @@ System.out.println("has " + number + " children");
     System.exit(1);
   }
 
-   // ===============================================================
-   //   execute/evaluate nodes
-   // ===============================================================
-
-  // ask this node to execute itself
-  // (for nodes that don't return a value)
-   public void execute() {
-
-//      System.out.println("Executing node " + id + " of kind " + kind );
-
-      if ( kind.equals("program") ) {
-         root = this;  // note the root node of entire tree
-         first.execute();  // execute the "main" funcCall
-      }// program
-
-      else if ( kind.equals("stmts") ) {
-         first.execute();
-         // returning is a flag saying that first 
-         // wants to return, so don't do this node's second
-         if ( second != null && !returning ) {
-            second.execute();
-         }
-      }// stmts
-
-      else if ( kind.equals("funcCall") ) {
-         // execute a function call as a statement
-         
-         String funcName = info;
-
-         // handle bifs
-         if ( funcName.equals("print") ) {
-            // evaluate the single <expr>
-            double value = first.first.evaluate();
-            if ( (int) value == value )
-               System.out.print( (int) value );
-            else
-               System.out.print( value );
-         }
-         else if ( funcName.equals("nl") ) {
-            System.out.println();
-         }
-      
-         else {// user-defined function
-       
-            Node body = passArgs( this, funcName );
-            body.second.execute();
-
-            returning = false;
-
-         }// user-defined function
-
-      }// funcCall
-      
-      else if ( kind.equals("str") ) {
-         System.out.print( info );
-      }// str
-      
-      else if ( kind.equals("sto") ) {
-         double value = first.evaluate();
-         table.store( info, value );
-      }// sto
-
-      else if ( kind.equals("if") ) {
-         double question = first.evaluate();
-         if ( question != 0 ) {
-            second.execute();
-         }
-         else {
-            third.execute();
-         }
-      }// if
-      
-      else if ( kind.equals("return") ) {
-         returnValue = first.evaluate();
-         // System.out.println("return value is set to " + returnValue );
-
-         returning = true;
-
-         // manage memtables
-            // pop the top mem table
-            memStack.remove( memStack.size()-1 );
-
-            // convenience note new top (if any)
-            if ( memStack.size() > 0 )
-               table = memStack.get( memStack.size()-1 );
-            else {// notice program is over
-               System.out.println(".......execution halting");
-               System.exit(0);
-            }
-               
-      }// return
-
-      else {
-         error("Executing unknown kind of node [" + kind + "]");     
-      }
-
-   }// execute
-    
-   // compute and return value produced by this node
-   public double evaluate() {
-
-//      System.out.println("Evaluating node " + id + " of kind " + kind );
-
-      if ( kind.equals("var") ) {
-         return table.retrieve( info );
-      }// var
-
-      else if ( kind.equals("num") ) {
-         return Double.parseDouble( info );
-      }
-
-      else if ( kind.equals("+") || kind.equals("-") ) {
-         double value1 = first.evaluate();
-         double value2 = second.evaluate();
-         if ( kind.equals("+") )
-            return value1 + value2;
-         else
-            return value1 - value2;
-      }
-
-      else if ( kind.equals("*") || kind.equals("/") ) {
-         double value1 = first.evaluate();
-         double value2 = second.evaluate();
-         if ( kind.equals("*") )
-            return value1 * value2;
-         else
-            return value1 / value2;
-       }
- 
-       else if ( kind.equals("opp") ) {
-          double value = first.evaluate();
-          return -value;
-       }
-
-       else if ( kind.equals("funcCall") ) {
-          // execute a function call to produce a value
-
-         String funcName = info;
-
-         double value;  // have all function calls put their value here
-                        // to return once at the bottom
-
-         // handle bifs
-
-         if ( member( funcName, bif0 ) ) {
-            if ( funcName.equals("input") )
-               value =  keys.nextDouble();
-            else {
-               error("unknown bif0 name [" + funcName + "]");
-               value = -1;
-            }
-         }
-         else if ( member( funcName, bif1 ) ) {
-            double arg1 = first.first.evaluate();
-
-            if ( funcName.equals("sqrt") )
-               value = Math.sqrt( arg1 );
-            else if ( funcName.equals("cos") )
-               value = Math.cos( Math.toRadians( arg1 ) );
-            else if ( funcName.equals("sin") )
-               value = Math.sin( Math.toRadians( arg1 ) );
-            else if ( funcName.equals("atan") )
-               value = Math.toDegrees( Math.atan( arg1 ) );
-            else if ( funcName.equals("round") )
-               value = Math.round( arg1 );
-            else if ( funcName.equals("trunc") )
-               value = (int) arg1;
-            else if ( funcName.equals("not") )
-               value = arg1 == 0 ? 1 : 0;
-            else {
-               error("unknown bif1 name [" + funcName + "]");
-               value = -1;
-            }
-         }
-         else if ( member( funcName, bif2 ) ) {
-            double arg1 = first.first.evaluate();
-            double arg2 = first.second.first.evaluate();
-
-            if ( funcName.equals("lt") ) 
-               value = arg1 < arg2 ? 1 : 0;
-            else if ( funcName.equals("le") ) 
-               value = arg1 <= arg2 ? 1 : 0;
-            else if ( funcName.equals("eq") ) 
-               value = arg1 == arg2 ? 1 : 0;
-            else if ( funcName.equals("ne") ) 
-               value = arg1 != arg2 ? 1 : 0;
-            else if ( funcName.equals("pow") ) 
-               value = Math.pow( arg1 , arg2 );
-            else if ( funcName.equals("and") ) 
-               value = arg1!=0 && arg2!=0 ? 1 : 0;
-            else if ( funcName.equals("or") ) 
-               value = arg1!=0 || arg2!=0 ? 1 : 0;
-            else {
-               error("unknown bif2 name [" + funcName + "]");
-               value = -1;
-            }
-         }
-
-         else {// user-defined function
-
-            Node body = passArgs( this, funcName );
-            body.second.execute();
-
-            value = returnValue;
-
-            returning = false;
-
-         }// user-defined function call
-
-         // uniformly finish
-         return value;
-
-       }// funcCall
-
-       else {
-          error("Evaluating unknown kind of node [" + kind + "]" );
-          return -1;
-       }
-
-   }// evaluate
-
    private final static String[] bif0 = { "input", "nl" };
    private final static String[] bif1 = { "sqrt", "cos", "sin", "atan", 
                              "round", "trunc", "not" };
    private final static String[] bif2 = { "lt", "le", "eq", "ne", "pow",
-                                          "or", "and"
-                                        };
+                                          "or", "and"};
 
    // return whether target is a member of array
    private static boolean member( String target, String[] array ) {
       for (int k=0; k<array.length; k++) {
-         if ( target.equals(array[k]) ) {
+             if ( target.equals(array[k]) ) {
             return true;
          }
       }
@@ -475,7 +253,7 @@ System.out.println("has " + number + " children");
        
    }// printContents
     
-   public void setRoot(Node rt) {
+   public static void setRoot(Node rt) {
       root = rt;
    }//setRoot
    
@@ -520,22 +298,22 @@ System.out.println("has " + number + " children");
             if (expression.info.equals("plus")) {
                double arg1 = Double.parseDouble(first.second.first.evaluate().info);
                double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
-               return new Node(String.parseString(arg1 + arg2));
+               return new Node(Double.toString(arg1 + arg2));
             }
             else if (expression.info.equals("minus")) {
                double arg1 = Double.parseDouble(first.second.first.evaluate().info);
                double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
-               return new Node(String.parseString(arg1 - arg2));
+               return new Node(Double.toString(arg1 - arg2));
             }
             else if (expression.info.equals("times")) {
                double arg1 = Double.parseDouble(first.second.first.evaluate().info);
                double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
-               return new Node(String.parseString(arg1 * arg2));
+               return new Node(Double.toString(arg1 * arg2));
             }
             else if (expression.info.equals("div")) {
                double arg1 = Double.parseDouble(first.second.first.evaluate().info);
                double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
-               return new Node(String.parseString(arg1 / arg2));
+               return new Node(Double.toString(arg1 / arg2));
             }
             else if (expression.info.equals("lt")) {
                double arg1 = Double.parseDouble(first.second.first.evaluate().info);
@@ -655,13 +433,13 @@ System.out.println("has " + number + " children");
          return first.evaluate(); //first will always be a list
       }
       else if (kind.equals("name")) { //node has to be a parameter or a user defined function without any parameters
-         Node body = findFunction(info);
-         if (body == null) { //name is not found in user defined functions so the node is a parameter
-            return memStack.get(memStack.size() - 1).retrieve(info); //gets the value of the parameter from the memTable at the top of memStack
-         }
-         else //name was found in the user defined functions
-            return body.second.evaluate();
+          Node body = findFunction(info);
+          if (body == null) { //name is not found in user defined functions so the node is a parameter
+              return memStack.get(memStack.size() - 1).retrieve(info); //gets the value of the parameter from the memTable at the top of memStack
+          } else //name was found in the user defined functions
+              return body.second.evaluate();
       }
+      return new Node("0");
    }//evaluate
 
 }// Node
