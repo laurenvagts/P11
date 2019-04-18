@@ -198,10 +198,10 @@ System.out.println("has " + number + " children");
          Node anode = funcCallNode.first.second;  // current args node
          while ( pnode != null && anode != null ) {
             // store argument value under parameter name
-            newTable.store( pnode.first.info,
+            newTable.store( pnode.info,
                             anode.first.evaluate() );
             // move ahead
-            pnode = pnode.second;
+            pnode = pnode.first;
             anode = anode.second;
          }
 
@@ -275,7 +275,6 @@ System.out.println("has " + number + " children");
       }
 
       if ( fdnode == null ) {// function not found
-         error( "Function definition for [" + funcName + "] not found" );
          return null;
       }
 
