@@ -86,6 +86,7 @@ public class Parser {
             return new Node( "params", name.getDetails(), null, null, null );
         }
         else {// have more params
+            lex.putBackToken(token);
             Node first = parseParams();
             return new Node( "params", name.getDetails(), first, null, null );
         }
