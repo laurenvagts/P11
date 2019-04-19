@@ -398,6 +398,9 @@ System.out.println("has " + number + " children");
             }
             else if (expression.info.equals("null")) {
                 Node arg1 = first.second.first;
+                if (arg1.first == null) {
+                    return new Node(0);
+                }
                 if (arg1.first.first == null) {
                     return new Node(1);
                 }
