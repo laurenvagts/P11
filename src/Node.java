@@ -64,7 +64,10 @@ public class Node {
   }
     
    //construct a node that is essentially a number
-   public Node( String str ) {
+   public Node( double num ) {
+      String str = Double.toString(num);
+      if (str.equals("NaN"))
+         System.out.println("Error: Needed a number and got " + num);
       kind = "number";  info = str;  
       first = null;  second = null;  third = null;
    }
@@ -249,7 +252,6 @@ System.out.println("has " + number + " children");
       else {
          System.out.println("Tried to print an invalid node type.");
       }
-      System.out.println();
        
    }// printContents
     
@@ -297,85 +299,84 @@ System.out.println("has " + number + " children");
             if (expression.info.equals("plus")) {
                double arg1 = Double.parseDouble(first.second.first.evaluate().info);
                double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
-               return new Node(Double.toString(arg1 + arg2));
+               return new Node(arg1 + arg2);
             }
             else if (expression.info.equals("minus")) {
                double arg1 = Double.parseDouble(first.second.first.evaluate().info);
                double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
-               return new Node(Double.toString(arg1 - arg2));
+               return new Node(arg1 - arg2);
             }
             else if (expression.info.equals("times")) {
                double arg1 = Double.parseDouble(first.second.first.evaluate().info);
                double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
-               return new Node(Double.toString(arg1 * arg2));
+               return new Node(arg1 * arg2);
             }
             else if (expression.info.equals("div")) {
                double arg1 = Double.parseDouble(first.second.first.evaluate().info);
                double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
-               return new Node(Double.toString(arg1 / arg2));
+               return new Node(arg1 / arg2);
             }
             else if (expression.info.equals("lt")) {
                double arg1 = Double.parseDouble(first.second.first.evaluate().info);
                double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
                if (arg1 < arg2)
-                  return new Node("1");
+                  return new Node(1);
                else
-                  return new Node("0");
+                  return new Node(0);
             }
             else if (expression.info.equals("le")) {
                double arg1 = Double.parseDouble(first.second.first.evaluate().info);
                double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
                if (arg1 <= arg2)
-                  return new Node("1");
+                  return new Node(1);
                else
-                  return new Node("0");
+                  return new Node(0);
             }
             else if (expression.info.equals("eq")) {
                double arg1 = Double.parseDouble(first.second.first.evaluate().info);
                double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
                if (arg1 == arg2)
-                  return new Node("1");
+                  return new Node(1);
                else
-                  return new Node("0");
+                  return new Node(0);
             }
             else if (expression.info.equals("ne")) {
                double arg1 = Double.parseDouble(first.second.first.evaluate().info);
                double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
                if (arg1 != arg2)
-                  return new Node("1");
+                  return new Node(1);
                else
-                  return new Node("0");
+                  return new Node(0);
             }
             else if (expression.info.equals("and")) {
                double arg1 = Double.parseDouble(first.second.first.evaluate().info);
                double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
                if ((arg1 != 0) && (arg2 != 0))
-                  return new Node("1");
+                  return new Node(1);
                else
-                  return new Node("0");
+                  return new Node(0);
             }
             else if (expression.info.equals("or")) {
                double arg1 = Double.parseDouble(first.second.first.evaluate().info);
                double arg2 = Double.parseDouble(first.second.second.first.evaluate().info);
                if ((arg1 != 0) || (arg2 != 0))
-                  return new Node("1");
+                  return new Node(1);
                else
-                  return new Node("0");
+                  return new Node(0);
             }
             else if (expression.info.equals("not")) {
                double arg1 = Double.parseDouble(first.second.first.evaluate().info);
                if (arg1 == 0)
-                  return new Node("1");
+                  return new Node(1);
                else
-                  return new Node("0");
+                  return new Node(0);
             }
             else if (expression.info.equals("ins")) {
                Node arg1 = first.second.first.evaluate(); //arg1 is an expression
                Node arg2 = first.second.second.first.evaluate(); //arg2 is a list
                if (arg2.first == null) { //arg2 is empty
                   Node front = new Node("items", arg1, null, null);
-                  arg2.first = front;
-                  return arg2;
+                  return new Node("list", front, null, null);
                }
                else {
                   Node front = new Node("items", arg1, arg2.first, null);
@@ -393,41 +394,40 @@ System.out.println("has " + number + " children");
             }
             else if (expression.info.equals("rest")) { //currently assumes arg1 has at least one item
                Node arg1 = first.second.first.evaluate(); //arg1 is a list
-               arg1.first = arg1.first.second;
-               return arg1;
+               return new Node ("list", arg1.first.second, null, null);
             }
             else if (expression.info.equals("null")) {
                 Node arg1 = first.second.first;
                 if (arg1.first == null) {
-                    return new Node("1");
+                    return new Node(1);
                 }
                 else {
-                    return new Node("0");
+                    return new Node(0);
                 }
             }
             else if (expression.info.equals("num")) {
                 Node arg1 = first.second.first;
                 if (arg1.kind == "num") {
-                    return new Node("1");
+                    return new Node(1);
                 }
                 else {
-                    return new Node("0");
+                    return new Node(0);
                 }
             }
             else if (expression.info.equals("list")) {
                 Node arg1 = first.second.first;
                 if (arg1.kind == "list") {
-                    return new Node("1");
+                    return new Node(1);
                 }
                 else {
-                    return new Node("0");
+                    return new Node(0);
                 }
             }
             else if (expression.info.equals("read")) {
                 System.out.println("?");
                 Scanner input = new Scanner(System.in);
                 //String in = input;
-                return new Node(input.next());
+                return new Node(input.nextDouble());
             }
             else if (expression.info.equals("write")) {
                 System.out.print(first.second.first.evaluate() + " ");
@@ -436,6 +436,8 @@ System.out.println("has " + number + " children");
                 System.out.println();
             }
             else if (expression.info.equals("quote")) {
+                if (first.second.first.kind.equals("expr"))
+                    return first.second.first.first;
                 return first.second.first;
             }
             else if (expression.info.equals("quit")) {
@@ -476,7 +478,8 @@ System.out.println("has " + number + " children");
           } else //name was found in the user defined functions
               return body.second.evaluate();
       }
-      return new Node("0");
+      return new Node(0);
    }//evaluate
 
 }// Node
+
