@@ -397,11 +397,11 @@ System.out.println("has " + number + " children");
                return new Node ("list", arg1.first.second, null, null);
             }
             else if (expression.info.equals("null")) {
-                Node arg1 = first.second.first;
-                if (arg1.first == null) {
+                Node arg1 = first.second.first.evaluate();
+                if (arg1.kind.equals("number") || arg1.kind.equals("name")) {
                     return new Node(0);
                 }
-                if (arg1.first.first == null) {
+                else if (arg1.first == null) {
                     return new Node(1);
                 }
                 else {
