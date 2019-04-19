@@ -398,7 +398,7 @@ System.out.println("has " + number + " children");
             }
             else if (expression.info.equals("null")) {
                 Node arg1 = first.second.first;
-                if (arg1.first == null) {
+                if (arg1.first.first == null) {
                     return new Node(1);
                 }
                 else {
@@ -407,7 +407,7 @@ System.out.println("has " + number + " children");
             }
             else if (expression.info.equals("num")) {
                 Node arg1 = first.second.first;
-                if (arg1.kind == "num") {
+                if (arg1.kind.equals("number")) {
                     return new Node(1);
                 }
                 else {
@@ -416,7 +416,7 @@ System.out.println("has " + number + " children");
             }
             else if (expression.info.equals("list")) {
                 Node arg1 = first.second.first;
-                if (arg1.kind == "list") {
+                if (arg1.first != null) {
                     return new Node(1);
                 }
                 else {
