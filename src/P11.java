@@ -45,6 +45,7 @@ public class P11 {
         Node root = parser.parseList();
         Node result = root.evaluate(); //return type is a <list> or an <expr> holding a number
         result.printContents();
+        System.out.println();
         
         //get the next expression or exit
         System.out.print("? ");
@@ -54,3 +55,4 @@ public class P11 {
    }// main
 
 }
+
