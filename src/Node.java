@@ -409,7 +409,7 @@ System.out.println("has " + number + " children");
                 }
             }
             else if (expression.info.equals("num")) {
-                Node arg1 = first.second.first;
+                Node arg1 = first.second.first.evaluate();
                 if (arg1.kind.equals("number")) {
                     return new Node(1);
                 }
@@ -418,8 +418,8 @@ System.out.println("has " + number + " children");
                 }
             }
             else if (expression.info.equals("list")) {
-                Node arg1 = first.second.first;
-                if (arg1.first != null) {
+                Node arg1 = first.second.first.evaluate();
+                if (arg1.kind.equals("list")) {
                     return new Node(1);
                 }
                 else {
