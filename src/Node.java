@@ -448,7 +448,7 @@ System.out.println("has " + number + " children");
             }
             else if (expression.info.equals("if")) {
                 Node arg1 = first.second.first;
-                if(arg1.evaluate().info.equals("0")){
+                if(Double.parseDouble(arg1.evaluate().info) == 0){
                     Node arg3 = first.second.second.second.first;
                     return arg3.evaluate();
                 }
