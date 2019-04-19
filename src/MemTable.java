@@ -53,7 +53,7 @@ public class MemTable {
         else {
             System.out.println("variable [" + name + "] not found");
             System.exit(1);
-            return new Node("0");
+            return new Node(0);
         }
 
     }// retrieve
