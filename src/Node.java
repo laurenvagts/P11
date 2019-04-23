@@ -374,6 +374,8 @@ System.out.println("has " + number + " children");
             else if (expression.info.equals("ins")) {
                Node arg1 = first.second.first.evaluate(); //arg1 is an expression
                Node arg2 = first.second.second.first.evaluate(); //arg2 is a list
+               if (arg1.kind.equals("list")
+                  arg1 = new Node("expr", arg1, null, null);
                if (arg2.first == null) { //arg2 is empty
                   Node front = new Node("items", arg1, null, null);
                   return new Node("list", front, null, null);
