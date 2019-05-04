@@ -391,7 +391,10 @@ public class Node {
                         error("Error: Tried to get the first element of an empty list");
                     }
                     else {
-                        return arg1.first.first;
+                        if (arg1.first.first.first == null) //returning a name or number
+                            return arg1.first.first;
+                        else //returning a list
+                            return arg1.first.first.first;
                     }
                 }
                 else if (expression.info.equals("rest")) { //currently assumes arg1 has at least one item
